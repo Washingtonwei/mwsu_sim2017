@@ -104,6 +104,7 @@ Modeling and Simulation (M\&S) is the representation of the behavior or characte
 	\item Simulations can be performed faster than real-time (ex. weather simulations)
 \end{itemize}
 
+Although interest in M\&S has greatly increased over recent years, there is still a lack of undergraduate level programs focusing on the design and implementation of simulation.  As M\&S is quickly becoming a multi-billion dollar industry, a highly skilled workforce is required.  In order to develop this workforce, modeling and simulation programs need to be developed starting in public school and ranging all the way through graduate level studies.  Although programs exist at the masters level and above, few programs exist at the undergraduate level \cite{banks2008compelling}.  The SEE program is an excellent introduction to distributed simulation as it provides faculty advisors and students with the needed elements: content, software, tools, systems, mentoring, along with project management support in an attempt to expand M\&S undergraduate level education.
 
 Initiated in 2011, the annual Simulation Exploration Experience event, formally known as SISO Smackdown, has successfully promoted the awareness of the use of High Level Architecture (HLA) in distributed simulation around the world. During the event, academia, industry and professional associations collaborate to design, develop, test and demonstrate a simulated lunar mission. SEE provides an excellent platform for college students to learn and practice both M\&S and software engineering concepts and principles. More importantly, the opportunity of working closely with M\&S professionals in industry and associations is an invaluable experience to the students. 
 
@@ -168,12 +169,6 @@ The architecture of the Satellite Constellation \& Lunar Visualization module is
 		\caption{MWSU satellite constellation \& lunar visualization module class diagram.}
 	\label{Class}
 \end{figure}
- 
-In this module, \uml{Satellite} is a subclass of the \uml{PhysicalEntity} object class defined in the SISO\_SpaceFOM\_entity FOM.  Once the MWSU federate was granted time advance by the NASA time regulating federate, each satellite published its logical time, entity name, reference frame and most up-to-date Cartesian coordinate position. Other federates which were interested in obtaining the attributes of satellites could subscribe to and receive the updates sent by the MWSU federate.
-
-Regarding the propagation of orbits, each satellite uses a numerical propagator provided by STK to propagate its orbit. STK Components increases the fidelity and accuracy of its simulation of orbits by providing a variety of environment and force models. In our case, spherical harmonic gravity of the moon and solar radiation force are considered during the propagation of a satellite\rq{}s orbit. The gravity model of the moon is read in from LunarGravityField\_LP100K.grv file. It is then used to construct the immutable field by selecting the desired fidelity degree and order of the represented field, as well as configuring other options such as the inclusion of tidal data. This field is then used to define the force at a given position. Those force models together with the six orbital elements are the parameters required to uniquely identify a specific orbit: semi major axis, eccentricity, inclination, argument of perigee, right ascension of the ascending node (RAAN) and true anomaly. These parameters were used to propagate the position, orientation, and other attributes of the satellites over time using the numerical propagator which we found to provide accurate orbits. 
-
-In our effort to visualize satellites and their orbits in STK\rq{}s Insight3D viewer, we adopted the STK Components\rq{} \uml{Platform} type which can be used to model satellites, facilities, aircraft, and other ``real-world\rq\rq{} objects. Simply put, an \uml{AGISatellitePlatform} object is created for each \uml{Satellite} object which stores: the name of the satellite, a time-varying position and orientation calculated by the numerical propagator. By adding the \uml{AGISatellitePlatform} into the Insight3D viewer, the visualization of satellites was accomplished.
 
 \subsection{\textit{Tag Ups} \& SpringSim '16}
 Starting in November 2015, the MWSU Sim team participated in weekly \textit{tag ups} which occurred at 09:00 CST (06:00 UTC) every Wednesday.  These hour-long meetings utilized a software called VSEE, a visual telecommunication software, that allowed teams from universities around the world, representatives from Pitch and VT M{\"A}K, as well as NASA engineers at both Johnson Space Center(JSC) and Kennedy Space Center(KSC) to communicate and share their progress.  As March 2016 approached, the VSEE \textit{tag ups} were used for preliminary connection testing. During these testing \textit{tag ups}, the Pitch RTI was initiated, then the three NASA world origination federates were connected to the RTI.  Once the simulated world had been instantiated, each team was asked individually to attempt to connect their federate to the Pitch RTI.  Connection of the MWSU satellite federate to the Pitch RTI was performed by first connecting to the VPN, initializing our satellite federate, and upon request from the VSEE meeting organizer, connection to the Pitch RTI.  
@@ -187,28 +182,11 @@ During the simulation, all nineteen federates connected successfully to the runt
 \section{Lessons Learned}
 During the integration test and the final demo, we found several problems with our federate.  The MWSU federate was able to locate all physical entities in the Insight3D viewer, and verify the location and motion information of different entities in the orbit of the moon or on the surface.  
 
-However, several problems with our federate were found during the integration testing:
+Although several problems with our federate were found during the integration testing, the only problem we were unable to fix was the M{\"A}K RTI exception:
 
-Problem 1: Significant time required to populate six satellites.
-Solution: This problem is understandable, as the STK numerical propagator calculates a large amount of data for each satellite in order to achieve high fidelity rendering.  By using background calculation capabilities, we achieved a reduction in the time required by parallelizing the satellite propagations.
 
-Problem 2: MWSU federate worked well with Pitch RTI but failed to run on M{\"A}K RTI. When testing on M{\"A}K RTI, exception ``unsatisfiedLinkError makRtiJava1516e.dll: the specified procedure could not be found\rq\rq{} is thrown.
+Problem: MWSU federate worked well with Pitch RTI but failed to run on M{\"A}K RTI. When testing on M{\"A}K RTI, exception ``unsatisfiedLinkError makRtiJava1516e.dll: the specified procedure could not be found\rq\rq{} is thrown.
 Solution: MWSU federate is a Java application built in Eclipse. This is an old problem with M{\"A}K RTI which does not work with the most recent version of the Java IDE. We attempted to downgrade our Java IDE environment/code in order to communicate with the M{\"A}K RTI, as suggested by members of the 2013 UAHuntsville team \cite{bulgatz2012design}. We were unable to solve this problem and have informed engineers at VT M{\"A}K. We hope this issue can be fixed for SEE 2017.
-
-Problem 3: MWSU federate kept throwing NullPointer exceptions due to other teams failing to provide the latest Attribute Handle Value Map or they provided Attribute Handle Value Map that misses certain attribute values.
-Solution: It is a good software engineering principle to not expect federates developed by other teams to behave exactly as expected. Proper and robust exception handling mechanisms were added to help solve this problem.
-
-Problem 4: For our Insight3D viewer, entities on the surface of the moon and those orbiting the moon were represented through markers and text. Since there were so many entities in 2016, the text and markers tended to bloat the viewer and hinder its readability.
-Solution: A distance constraint on the visibility of the marker was added so that a marker would only become visible when the distance between the camera and the entity was less than 1000km. If the moon was viewed at a great distance, only the text representing the name of the entity could be seen in the Insight3D viewer.
-
-Problem 5: During testing, we found that some HLA callbacks were never called when they were supposed to be called.
-Solution: HLA provides different versions of the same callback, for instance, there are three reflectAttributeValues callbacks. Since the specific callback version the RTI would invoke could not be predicted with optimal success, we added all three callback versions defined in \uml{TheFederate} class and placed the same implementation code in three reflectAttributeValues() functions with different signatures.
- 
-Problem 6: When a federate resigned from the federation, the Insight3D viewer still kept the marker and text representing the physical entity of that resigned federate.
-Solution: Added code to clear the marker and text when the callback method removeObjectInstance was called.
-
-Problem 7: Synchronization exception occurred during the demonstration in insight3DTimeChanged() method of class \uml{LCANSatManager} due to different threads competing on the otherEntitiesToBeDrawn list. This caused the Insight3D viewer to crash.
-Solution: Our current solution, although not optimal due to time constraints, was to surround the trouble code with a try-catch block in order to prevent the entire Insight3D viewer from crashing during the event. A better solution would be to add a mutual exclusion lock on this resource. The future team should be aware that this problem has not been solved properly.
 
 \section{Advice for Future Teams}
 The more teams that participate in SEE, the better the experience for everyone involved.  If you would like to start a SEE Sim team at your university please visit the http://www.exploresim.com/team.\\
@@ -225,11 +203,9 @@ The steps to start a team of your own are as follows:
 	\item Fill out and submit teh team official interest form.
 	\item Wait to be contacted by SEE General Manager Stephen Paglialonga.
 \end{enumerate}
-Add stuff like what we did...1 month for HLA learn, hla starter kit, read crues code
-First, learn HLA
-Second, what useful meaningful federate to build (satellite, giant laser, moon buggy...etc)
-Application Logic (how are we writing our federate)
-HLA logic (how are we connecting our federate to the federation)
+
+Once you have a team consisting of at least one faculty advisor and one student willing to learn HLA, in depth study of HLA should begin.  The best place to start is to read the HLA Tutorial available at http://www.pitchtechnologies.com/hlatutorial/.  It is our suggestion that a minimum of one month be given to the study of HLA in order to fully understand the infrastructure and intricacy of the system.  After everyone on the team has reached some degree of familiarity with the HLA infrastructure, and has acquired access to the SEE team development website, the Assembla Repository will be available.  This repository houses not only a fantastic interactive tutorial on creating a federate using Java, but also the Aitkin Basin and Environment federates developed by NASA engineer Zack Crues.  These two federates are the cornerstone of the entire lunar mission simulation and are extremely well-commented, making them one of the best learning tools available.
+The next step is to decide what meaningful federate to build.  Does your team want to create a satellite system to relay information, a giant laser to target incoming asteroids, or a moon buggy to transport researchers around the lunar base?  Creating a meaningful federate that will interact cooperatively with federates created by other inter-university teams is vital to the overall experience of SEE.  After your team has decided on an idea for a federate, the team needs to decide on application logic: how are you going to create this federate?  Are you going to use STK written in Java and Eclipse for visualization?  If you do, remember that the M{\"A}K RTI does not yet work well with Java applications.   Finally, the team needs to consider how to connect the federate to the federation, as the whole purpose of this exciting exercise is to work with other university students, professional engineers, and industry representatives to develop a distributed simulation.
 
 % conference papers do not normally have an appendix
 
