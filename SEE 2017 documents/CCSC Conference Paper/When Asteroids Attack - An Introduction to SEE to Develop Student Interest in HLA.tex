@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[journal, onecolumn]{IEEEtran}
 
 \ifCLASSOPTIONcompsoc
   % IEEE Computer Society needs nocompress option
@@ -13,6 +13,7 @@
 \usepackage[pdftex]{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage{array}
+\usepackage[justification=centering]{caption}
 %\usepackage{hyperref}
 \graphicspath{{./figures/}}
 
@@ -70,9 +71,9 @@
 %
 
 \author{\IEEEauthorblockN{Bingyang Wei\IEEEauthorrefmark{1},
-Amy Knowles, Chris Silva, Christine Mounce}
-\IEEEauthorblockA{Department of Computer Science\\
-Midwestern State University,
+Amy Knowles, Chris Silva, Christine Mounce} \\
+\IEEEauthorblockA{Department of Computer Science \\
+Midwestern State University, \\
 Wichita Falls, Texas 76308\\ \IEEEauthorrefmark{1}Email: bingyang.wei@mwsu.edu}}
 
 % make the title area
@@ -81,7 +82,7 @@ Wichita Falls, Texas 76308\\ \IEEEauthorrefmark{1}Email: bingyang.wei@mwsu.edu}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-The Simulation Exploration Experience (SEE) is an annual, inter-university, distributed simulation challenge led by NASA. A primary objective is to provide a platform for college students to work in highly dispersed teams to design, develop, test, and execute a simulated lunar mission using High Level Architecture. During the SEE in 2016, 19 federates developed by student teams from three continents successfully joined the HLA federation and collaborated to accomplish a lunar mission. The Midwestern State University team first participated in SEE 2016 by developing a communication satellite federate which broadcast an alert about the incoming of an asteroid to physical entities on the surface of the moon. This paper describes SEE, High Level Architecture, the MWSU Sim Team experience, lessons learned and recommendations for future teams.
+The Simulation Exploration Experience (SEE) is an annual, inter-university, distributed simulation challenge led by NASA. A primary objective is to provide a platform for college students to work in highly dispersed teams to design, develop, test, and execute a simulated lunar mission using High Level Architecture. During the SEE in 2016, 19 federates developed by student teams from three continents successfully joined the HLA federation and collaborated to accomplish a lunar mission. The Midwestern State University team first participated in SEE 2016 by developing a communication satellite federate which broadcast an alert about the incoming of an asteroid to physical entities on the surface of the moon. This paper describes SEE, High Level Architecture, the NASA and other team federates, the MWSU Sim Team experience, lessons learned and recommendations for future teams.
 \end{abstract}
 
 % For peer review papers, you can put extra information on the cover
@@ -94,10 +95,19 @@ The Simulation Exploration Experience (SEE) is an annual, inter-university, dist
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
-\section{Introduction to SEE}
+\section{Introduction}
+Modeling and Simulation (M\&S) is the representation of the behavior or characteristics of one system, such as the moon, through the use of another system, which in our case is a diverse group of computer programs designed under the High Level Architecture (HLA) standard. Simulations allow us to view and explore the behavior of a system that may be too expensive or too risky to explore in the real world. Interest in M\&S has increased greatly over recent years, in part due to the following reasons:
+\begin{itemize}
+	\item Simulations are generally less expensive, and far safer than real-world experiments (ex. supercomputer simulations of nuclear explosions)
+	\item Simulations can be more immersive than attempts at real-world experiments (ex. simulations of surface conditions of nearby planets in 
+		preparation for future NASA missions)
+	\item Simulations can be performed faster than real-time (ex. weather simulations)
+\end{itemize}
+
+
 Initiated in 2011, the annual Simulation Exploration Experience event, formally known as SISO Smackdown, has successfully promoted the awareness of the use of High Level Architecture (HLA) in distributed simulation around the world. During the event, academia, industry and professional associations collaborate to design, develop, test and demonstrate a simulated lunar mission. SEE provides an excellent platform for college students to learn and practice both M\&S and software engineering concepts and principles. More importantly, the opportunity of working closely with M\&S professionals in industry and associations is an invaluable experience to the students. 
 
-SEE originated with NASA engineer Zack crues and has been implemented annualy since 2011 by NASA and the SISO Space Community Forum.  It was developed as a way engage students in modeling and simulation, an area of education almost non-existant at the undergraduate level.  Because SEE involves geographically distributed inter-university teams, it proves to the participants that interoperability and standards matter in order to allow distributed parts of the simulation to work seamlessly. This program allows students to learn HLA in a fail-free environment with expert and peer support, to alearn employer expectations first-hand, as well as allow them to assess their interest and aptitude for a career in M\&S.  
+SEE originated with NASA engineer Zack crues and has been implemented annualy since 2011 by NASA and the SISO Space Community Forum.  It was developed as a way engage students in modeling and simulation, an area of education almost non-existant at the undergraduate level.  Because SEE involves geographically distributed inter-university teams, it proves to the participants that interoperability and standards matter in order to allow distributed parts of the simulation to work seamlessly. This program allows students to learn HLA in a fail-free environment with expert and peer support, to learn employer expectations first-hand, as well as allow them to assess their interest and aptitude for a career in M\&S.  
 
 This paper concentrates on the learning experience of Midwestern State University team members, their interactions with other student teams across the world, industry representatives from Pitch, and NASA engineers at both JSC and KSC.  The rest of the paper is structured as follows: Section II provides an introduction to High Level Architecture (HLA); Section III describes in detail the 2016 experience of the Midwestern State University (MWSU) team; Lessons learned from SEE are discussed in Section IV and Section V concludes the paper and provides instructions for future teams to join SEE.
 
@@ -111,21 +121,21 @@ High-Level Architecture(HLA) is an architecture that allows many distributed sim
 			\item Federation - All of the federates along with the RTI and the FOM they use.
 			\item Federation Execution - An instance of the federation.
 		\end{itemize}
-		HLA uses a publish/subscribe methodology for information services. This means that a federate "publishes" certain data and "subscribes" to other data. To publish data a federate sends it to the RTI. To receive subscribed data a federate will receive a callback from the RTI anytime the subscribed data is updated (see Figure \ref{interactions}). \\
-\begin{figure}[!htbp]
-	\centering
-		\includegraphics[width=\linewidth]{interactions.png}
-		\caption{MWSU Satellite publish/subscribe listing.}
-	\label{interactions}
-\end{figure}
+		HLA uses a publish/subscribe methodology for information services. This means that a federate "publishes" certain data and "subscribes" to other data. To publish data a federate sends it to the RTI. To receive subscribed data a federate will receive a callback from the RTI anytime the subscribed data is updated. \\
+%\begin{figure}[!htbp]
+%	\centering
+%		\includegraphics[width=\linewidth]{interactions.png}
+%		\caption{MWSU Satellite publish/subscribe listing.}
+%	\label{interactions}
+%\end{figure}
 		
-		The FOM (see Figure \ref{fom}) contains descriptions of the Objects, Interactions, and Data Types that federates will use in a federation. Because of this all federates must agree on which FOMs to use. This is arguably the most important part of the HLA standard; it ensures that the designers of each federate communicate in order to come to an agreement on not just the FOM, but on other aspects such as the overall goal of the simulation.
-\begin{figure}[!htbp]
-	\centering
-		\includegraphics[width=\linewidth]{fom.png}
-		\caption{FOMs used in SEE 2016.}
-	\label{fom}
-\end{figure}		
+		The FOM contains descriptions of the Objects, Interactions, and Data Types that federates will use in a federation. Because of this all federates must agree on which FOMs to use. This is arguably the most important part of the HLA standard; it ensures that the designers of each federate communicate in order to come to an agreement on not just the FOM, but on other aspects such as the overall goal of the simulation.
+%\begin{figure}[!htbp]
+%	\centering
+%		\includegraphics[width=\linewidth]{fom.png}
+%		\caption{FOMs used in SEE 2016.}
+%	\label{fom}
+%\end{figure}		
 		
 The recommended representation for a federation is called a "lollipop" diagram (see Figure \ref{lollipop}). 
 \begin{figure}[!htbp]
@@ -145,15 +155,16 @@ The Satellite Constellation \& Lunar Visualization module first propagates and t
 When the whole federation is running on Pitch RTI, a 6-satellite constellation is designed over Aitken Basin to maximize the time each satellite is in view of the surface entities as shown in Figure \ref{Satellites}.
 \begin{figure}[!htbp]
 	\centering
-		\includegraphics[width=\linewidth]{Satellites.PNG}
+		\includegraphics[width=100mm]{Satellites.PNG}
 		\caption{MWSU communication satellites federate.}
 	\label{Satellites}
 \end{figure}
 
 The architecture of the Satellite Constellation \& Lunar Visualization module is shown in, Figure \ref {Class}, a UML class diagram.
+
 \begin{figure}[!htbp]
 	\centering
-		\includegraphics[width=\linewidth]{ClassDiagram.png}
+		\includegraphics[width=100mm]{ClassDiagram.png}
 		\caption{MWSU satellite constellation \& lunar visualization module class diagram.}
 	\label{Class}
 \end{figure}
@@ -182,7 +193,7 @@ Problem 1: Significant time required to populate six satellites.
 Solution: This problem is understandable, as the STK numerical propagator calculates a large amount of data for each satellite in order to achieve high fidelity rendering.  By using background calculation capabilities, we achieved a reduction in the time required by parallelizing the satellite propagations.
 
 Problem 2: MWSU federate worked well with Pitch RTI but failed to run on M{\"A}K RTI. When testing on M{\"A}K RTI, exception ``unsatisfiedLinkError makRtiJava1516e.dll: the specified procedure could not be found\rq\rq{} is thrown.
-Solution: MWSU federate is a Java application built in Eclipse. This is an old problem with M{\"A}K RTI which does not work with the most recent version of the Java IDE. We attempted to downgrade our Java IDE environment/code in order to communicate with the M{\"A}K RTI, as suggested by members of the 2012 UAHuntsville team \cite{bulgatz2012design}. We were unable to solve this problem and have informed engineers at VT M{\"A}K. We hope this issue can be fixed for SEE 2017.
+Solution: MWSU federate is a Java application built in Eclipse. This is an old problem with M{\"A}K RTI which does not work with the most recent version of the Java IDE. We attempted to downgrade our Java IDE environment/code in order to communicate with the M{\"A}K RTI, as suggested by members of the 2013 UAHuntsville team \cite{bulgatz2012design}. We were unable to solve this problem and have informed engineers at VT M{\"A}K. We hope this issue can be fixed for SEE 2017.
 
 Problem 3: MWSU federate kept throwing NullPointer exceptions due to other teams failing to provide the latest Attribute Handle Value Map or they provided Attribute Handle Value Map that misses certain attribute values.
 Solution: It is a good software engineering principle to not expect federates developed by other teams to behave exactly as expected. Proper and robust exception handling mechanisms were added to help solve this problem.
@@ -199,7 +210,7 @@ Solution: Added code to clear the marker and text when the callback method remov
 Problem 7: Synchronization exception occurred during the demonstration in insight3DTimeChanged() method of class \uml{LCANSatManager} due to different threads competing on the otherEntitiesToBeDrawn list. This caused the Insight3D viewer to crash.
 Solution: Our current solution, although not optimal due to time constraints, was to surround the trouble code with a try-catch block in order to prevent the entire Insight3D viewer from crashing during the event. A better solution would be to add a mutual exclusion lock on this resource. The future team should be aware that this problem has not been solved properly.
 
-\section{Future Team Participation}
+\section{Advice for Future Teams}
 The more teams that participate in SEE, the better the experience for everyone involved.  If you would like to start a SEE Sim team at your university please visit the http://www.exploresim.com/team.\\
 The requirements to start a team are:
 \begin{enumerate}
@@ -214,6 +225,11 @@ The steps to start a team of your own are as follows:
 	\item Fill out and submit teh team official interest form.
 	\item Wait to be contacted by SEE General Manager Stephen Paglialonga.
 \end{enumerate}
+Add stuff like what we did...1 month for HLA learn, hla starter kit, read crues code
+First, learn HLA
+Second, what useful meaningful federate to build (satellite, giant laser, moon buggy...etc)
+Application Logic (how are we writing our federate)
+HLA logic (how are we connecting our federate to the federation)
 
 % conference papers do not normally have an appendix
 
