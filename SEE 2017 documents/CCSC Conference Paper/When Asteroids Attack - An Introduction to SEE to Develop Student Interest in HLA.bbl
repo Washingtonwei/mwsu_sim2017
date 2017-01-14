@@ -33,26 +33,17 @@ A.~Falcone, A.~Garro, F.~Longo, and F.~Spadafora, ``Simulation exploration
   Applications (DS-RT), 2014 IEEE/ACM 18th International Symposium on}.\hskip
   1em plus 0.5em minus 0.4em\relax IEEE, 2014, pp. 113--120.
 
-\bibitem{STK}
-``Agi stk components,''
-  \url{http://www.agi.com/products/stk/modules/default.aspx/id/stk-components},
-  accessed: 2016-05-15.
-
-\bibitem{walker1984satellite}
-J.~G. Walker, ``Satellite constellations,'' \emph{Journal of the British
-  Interplanetary Society}, vol.~37, pp. 559--572, 1984.
-
 \bibitem{bulgatz2012design}
 D.~Bulgatz, D.~Heater, D.~A. O\rq{}Neil, B.~Norris, B.~C. Schricker, and M.~D.
   Petty, ``Design and implementation of lunar communications satellite and
   server federates for the 2012 siso smackdown federation,'' in
   \emph{Proceedings of the Fall 2012 Simulation Interoperability Workshop}, pp.
   10--14.
-
+  
 \bibitem{banks2008compelling}
 C.M.~Banks, and M.L.~McGinnis, ``Compelling challenges and recommended solutions:
   developing a continuity of M\&S education from public school to graduate studies,''
   in \emph{Proceedings of the 2008 Spring simulation multiconference}, pp.773--780,
   2008.
-
+  
 \end{thebibliography}
