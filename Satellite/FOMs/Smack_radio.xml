@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelIdentification>
+        <name>SISO_Smackdown_Radio</name>
+        <type>FOM</type>
+        <version>2012-0.4</version>
+        <modificationDate>2012-02-22</modificationDate>
+        <securityClassification>Unclassified</securityClassification>
+        <purpose>Define radio communications for SISO Smackdown</purpose>
+        <applicationDomain></applicationDomain>
+        <description>Define interactions and objects passed between an entity and the communications server.</description>
+        <useLimitation></useLimitation>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>Daniel Heater</pocName>
+            <pocOrg>UAHuntsville</pocOrg>
+            <pocEmail>daniel@heatertech.com</pocEmail>
+        </poc>
+        <other></other>
+    </modelIdentification>
+    <objects>
+        <objectClass>
+            <name>HLAobjectRoot</name>
+            <objectClass>
+                <name>Radio</name>
+                <sharing>PublishSubscribe</sharing>
+                <semantics>Radio attributes.</semantics>
+                <attribute>
+                    <name>radio_name</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>Upon initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Name of the radio. For the purposes of the 2012 scenario, this should be the smae as the vehcile name.</semantics>
+                </attribute>
+                <attribute>
+                    <name>elevation</name>
+                    <dataType>Position</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>when changs</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Elevation of the radio above the lunar suraface. This is used in LOS calculations.</semantics>
+                </attribute>
+                <attribute>
+                    <name>TX_power</name>
+                    <dataType>Power</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>during initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Power level at which the radio transmits</semantics>
+                </attribute>
+                <attribute>
+                    <name>TX_frequency</name>
+                    <dataType>Frequency</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>during initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Frequency at which the radio transmits</semantics>
+                </attribute>
+                <attribute>
+                    <name>TX_enable</name>
+                    <dataType>HLAswitch</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>when changes</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Indication of the availability of the transmitter.</semantics>
+                </attribute>
+                <attribute>
+                    <name>RX_required_signal_strength</name>
+                    <dataType>Power</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>during initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>The minimum signal strength required for a signal to be received at the radio.</semantics>
+                </attribute>
+                <attribute>
+                    <name>RX_frequency</name>
+                    <dataType>Frequency</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>during initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Frequency at which the radio can reeive signals</semantics>
+                </attribute>
+                <attribute>
+                    <name>RX_enable</name>
+                    <dataType>HLAswitch</dataType>
+                    <updateType>Conditional</updateType>
+                    <updateCondition>when changes</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Inidication of the availability of the receiver.</semantics>
+                </attribute>
+                <attribute>
+                    <name>is_router</name>
+                    <dataType>HLAboolean</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>during initialization</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Indication as to whether the radio has store/forward routing capabilities.</semantics>
+                </attribute>
+            </objectClass>
+        </objectClass>
+    </objects>
+    <interactions>
+        <interactionClass>
+            <name>HLAinteractionRoot</name>
+            <interactionClass>
+                <name>Radio_message</name>
+                <sharing>Neither</sharing>
+                <dimensions/>
+                <transportation>HLAbestEffort</transportation>
+                <order>TimeStamp</order>
+                <semantics>A message passed between an entity and the communication server.</semantics>
+                <parameter>
+                    <name>source</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <semantics>Name of the entity initiating the message.</semantics>
+                </parameter>
+                <parameter>
+                    <name>destination</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <semantics>The name of the entity intended to receive the message. An empty destination indicates that the message is intended for any receiver in range.</semantics>
+                </parameter>
+                <parameter>
+                    <name>is_broadcast</name>
+                    <dataType>HLAboolean</dataType>
+                    <semantics>Indicate that reliable delivery is not required.</semantics>
+                </parameter>
+                <parameter>
+                    <name>Payload</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <semantics>The body of the message to be sent.</semantics>
+                </parameter>
+                <interactionClass>
+                    <name>TX_message</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAbestEffort</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>A message passed from an entity to it's radio.</semantics>
+                </interactionClass>
+                <interactionClass>
+                    <name>RX_message</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>A message passed from the radio receiver to it's owning entity.</semantics>
+                </interactionClass>
+            </interactionClass>
+        </interactionClass>
+    </interactions>
+    <dataTypes>
+        <simpleDataTypes>
+            <simpleData>
+                <name>Power</name>
+                <representation>HLAfloat32LE</representation>
+                <units>Watt (W)</units>
+                <resolution>NA</resolution>
+                <accuracy>NA</accuracy>
+                <semantics>A measurement of electrical power.</semantics>
+            </simpleData>
+            <simpleData>
+                <name>Frequency</name>
+                <representation>HLAfloat32LE</representation>
+                <units>Hertz (HZ)</units>
+                <resolution>NA</resolution>
+                <accuracy>NA</accuracy>
+                <semantics>A measurement of periodicity.</semantics>
+            </simpleData>
+        </simpleDataTypes>
+        <enumeratedDataTypes/>
+        <arrayDataTypes/>
+        <fixedRecordDataTypes/>
+        <variantRecordDataTypes/>
+    </dataTypes>
+    <notes/>
+</objectModel>
