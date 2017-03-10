@@ -1,5 +1,7 @@
 package satellite;
 
+import java.util.Scanner;
+
 public class Main {
 	
 	static final long TIME_TICK = 1000000;        // microseconds.
@@ -8,33 +10,37 @@ public class Main {
 	public static void main(String[] args) {
 		System.out.println("Starting MWSU Satellite Federate");
 		
-//		//create federate and connect to federation
-//		Federate federate = new Federate("127.0.0.1", TIME_TICK, HLA_CONSTRAIN_TIME);
-//		
-//		//sleep for 10 seconds
-//		try {
-//			Thread.sleep(10000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		//resign from federation
-//		federate.resign();
-		//7350.24607837
-		//7352.01379247
-		Orbit orbit = new Orbit();
-		double last_theta = orbit.getTrueAnomaly();
-		double last_radius = orbit.getRadius();
-		for (int i = 0; i < 60; i++) {
-			orbit.Propogate(0.00001157407407);
-			//if (i%1000 == 0) {
-				System.out.println(String.format("Time: %1$d rDiff: %2$fm tDiff: %3$f°", i, 
-						Math.abs(last_radius - orbit.getRadius()), Math.abs(last_theta - orbit.getTrueAnomaly())));
-				last_theta = orbit.getTrueAnomaly();
-				last_radius = orbit.getRadius();
-			//}
-		}
+		//create federate and connect to federation
+		Federate federate = new Federate("10.8.0.193", TIME_TICK, HLA_CONSTRAIN_TIME,"8989");
 		
+		
+		//For the SEE 2017 event, the Simulation Ephoc has been set to 04/19/2015 20:00:00 GMT. 
+		Boolean done = false;
+		String command;
+		Scanner sc = new Scanner(System.in);
+		while (!done) {
+			System.out.print("Enter a command: ");
+			command = sc.nextLine();
+			switch (command) {
+			case "join":
+				federate.Join();
+				break;
+			case "resign":
+				federate.Resign();
+				break;
+			case "gameloop":
+				federate.Gameloop();
+				break;
+			case "quit":
+				done = true;
+				break;
+			default:
+				System.out.println("Invalid command");
+			}
+		}
+	
+		sc.close();
+	
 		System.out.println("Stopping MWSU Satellite Federate");
 	}
 
