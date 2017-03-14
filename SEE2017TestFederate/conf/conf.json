@@ -1,0 +1,13 @@
+{
+  "asynchronousDelivery" : true,
+  "crcHost" : "10.8.0.193",
+  "crcPort" : 8989,
+  "federateName" : "MWSU_Satellite",
+  "federateType" : "PhysicalEntity",
+  "federationName" : "SEE 2017",
+  "fomDirectory" : "foms",
+  "realtime" : false,
+  "simulationEphoc" : "2015-04-19T20:00:00.000Z",
+  "timeConstrained" : true,
+  "timeRegulating" : false
+}

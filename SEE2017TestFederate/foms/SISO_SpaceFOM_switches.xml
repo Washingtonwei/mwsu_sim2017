@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelIdentification>
+        <name>SISO Space FOM Switches</name>
+        <type>FOM</type>
+        <version>0.1</version>
+        <modificationDate>2016-12-09</modificationDate>
+        <securityClassification>Unclassified</securityClassification>
+        <purpose>SISO Space FOM Switches Table</purpose>
+        <applicationDomain></applicationDomain>
+        <description>Required HLA Switches table definitions.</description>
+        <useLimitation></useLimitation>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>Edwin Zack Crues</pocName>
+            <pocOrg>NASA Johnson Space Center</pocOrg>
+            <pocTelephone>1-281-483-2902</pocTelephone>
+            <pocEmail>edwin.z.crues@nasa.gov</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>Dan Dexter</pocName>
+            <pocOrg>NASA Johnson Space Center</pocOrg>
+            <pocTelephone>1-281-483-1142</pocTelephone>
+            <pocEmail>dan.e.dexter@nasa.gov</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Contributor</pocType>
+            <pocName>Björn Möller</pocName>
+            <pocOrg>Pitch Technologies, Sweden</pocOrg>
+            <pocEmail>bjorn.moller@pitch.se</pocEmail>
+        </poc>
+        <poc>
+            <pocType>Contributor</pocType>
+            <pocName>Alfredo Garro</pocName>
+            <pocOrg>DIMES Department, University of Calabria, Italy</pocOrg>
+            <pocTelephone>+39-0984-49-4795</pocTelephone>
+            <pocEmail>alfredo.garro@unical.it</pocEmail>
+        </poc>
+        <other></other>
+    </modelIdentification>
+    <switches>
+        <autoProvide isEnabled="false"/>
+        <conveyRegionDesignatorSets isEnabled="false"/>
+        <conveyProducingFederate isEnabled="false"/>
+        <attributeScopeAdvisory isEnabled="false"/>
+        <attributeRelevanceAdvisory isEnabled="false"/>
+        <objectClassRelevanceAdvisory isEnabled="false"/>
+        <interactionRelevanceAdvisory isEnabled="false"/>
+        <serviceReporting isEnabled="false"/>
+        <exceptionReporting isEnabled="false"/>
+        <delaySubscriptionEvaluation isEnabled="false"/>
+        <automaticResignAction resignAction="CancelThenDeleteThenDivest"/>
+    </switches>
+</objectModel>

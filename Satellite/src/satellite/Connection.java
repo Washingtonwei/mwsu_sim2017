@@ -11,6 +11,7 @@ public class Connection {
 	private static final String FEDERATION_NAME = "SEE 2017";
 	private String federateName;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+	private boolean connected = false;
 	
 	public Connection() {
 		
@@ -28,7 +29,8 @@ public class Connection {
 //			try {
 //				rtiAmbassador.destroyFederationExecution(FEDERATION_NAME);
 //			} catch (Exception e) {
-//				//ignore, this just means there was no existing federation execution to destroy
+//				// ignore, this just means there was no existing federation
+//				// execution to destroy
 //			}
 			
 			//Setup FOM urls
@@ -49,7 +51,7 @@ public class Connection {
 //			} catch (FederationExecutionAlreadyExists e) {
 //				//ignore, someone else already created the federation execution
 //			}
-//			
+			
 			//attempt to connect to the federation
 			federateName = "MWSU_Satellite";
 			try {
@@ -64,13 +66,13 @@ public class Connection {
 			try {
 				rtiAmbassador.enableAsynchronousDelivery();
 			} catch (RTIinternalError rti_error) {
-				System.out.println("Failed to connect to enable asynchronous delivery(1)");
+				System.out.println("Failed to enable asynchronous delivery(1)");
 	            LOGGER.log(Level.SEVERE, rti_error.getMessage());
             } catch (Exception e) {
-				System.out.println("Failed to connect to enable asynchronous delivery(2)");
+				System.out.println("Failed to enable asynchronous delivery(2)");
                 LOGGER.log(Level.SEVERE, e.getMessage());
             }
-			
+			connected = true;
 		} catch (Exception e) {
 			System.out.println("Failed to setup connection");
             LOGGER.log(Level.SEVERE, e.getMessage());
@@ -87,9 +89,15 @@ public class Connection {
 //            }
             rtiAmbassador.disconnect();
             rtiAmbassador = null;
+            connected = false;
         } catch (Exception e) {
         	System.out.println("Failed to resign from federation execution");
             LOGGER.log(Level.SEVERE, e.getMessage());
         }
     }
+    
+    public boolean isConnected() {
+    	return connected;
+    }
+    
 }
