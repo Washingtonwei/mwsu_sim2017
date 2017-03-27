@@ -10,12 +10,11 @@ import model.interactionClass.MTRMode;
 import model.interactionClass.ModeTransitionRequest;
 import model.objectClass.ExecutionConfiguration;
 import model.objectClass.ExecutionMode;
-import satellite.Orbit;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
 
+import constellation.Constellation;
+import constellation.Orbit;
 import siso.smackdown.frame.FrameType;
 import siso.smackdown.frame.ReferenceFrame;
 import skf.config.Configuration;
@@ -41,10 +40,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 	private ShutdownTask shutdownTask = null;
 
 	private long timeCycle;
-	private Orbit orbit;
-
-	private double last_theta;
-	private double last_radius;
+	private Constellation constellation;
 
 	public TestFederate(SEEAbstractFederateAmbassador seefedamb) throws RTIinternalError {
 		super(seefedamb);
@@ -167,10 +163,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		super.startExecution();
 
 		timeCycle = getTime().getFederationExecutionTimeCycle();
-		orbit = new Orbit();
-
-		last_theta = orbit.getTrueAnomaly();
-		last_radius = orbit.getRadius();
+		constellation = new Constellation(1);
 	}
 
 	// this is where we will propagate satellites
@@ -185,13 +178,8 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		timeCycle = temp;
 		// need to change orbit class so it fits our satellite/moon scenario
 		if (orbit != null) {
-			// orbits per day / seconds in a day / microseconds in a second *
-			// the time difference
-			orbit.Propogate(12.62256095 / 86400 / 1000000 * timeDifference);
-			System.out.println(String.format("Time: %1$d rDiff: %2$fm tDiff: %3$f°", i,
-					Math.abs(last_radius - orbit.getRadius()), Math.abs(last_theta - orbit.getTrueAnomaly())));
-			last_theta = orbit.getTrueAnomaly();
-			last_radius = orbit.getRadius();
+			// orbits per day / seconds in a day / microseconds in a second * the time difference
+			constellation.Propagate(24/86400 / 1000000 * timeDifference);
 		}
 		/*
 		 * proactive behavior
