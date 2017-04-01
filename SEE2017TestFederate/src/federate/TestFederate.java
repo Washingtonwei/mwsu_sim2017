@@ -163,7 +163,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		super.startExecution();
 
 		timeCycle = getTime().getFederationExecutionTimeCycle();
-		constellation = new Constellation(1);
+		constellation = new Constellation(21);
 	}
 
 	// this is where we will propagate satellites
@@ -177,7 +177,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		long timeDifference = temp - timeCycle;
 		timeCycle = temp;
 		// need to change orbit class so it fits our satellite/moon scenario
-		if (orbit != null) {
+		if (constellation != null) {
 			// orbits per day / seconds in a day / microseconds in a second * the time difference
 			constellation.Propagate(24/86400 / 1000000 * timeDifference);
 		}

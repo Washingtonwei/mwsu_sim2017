@@ -9,7 +9,7 @@ public class Orbit {
 	private double time = 0; // epoch (variable will be used for last
 										// known time)
 	private double meanAnomaly = 326.2322; // degrees - mean anomaly at epoch (will be used for last known mean anomaly)
-	private double meanMotion = 24; // mean motion (orbits per day right now)
+	private double meanMotion = 3600; // mean motion (orbits per day right now)
 	private double eccentricAnomaly; // radians - eccentric anomaly
 	private double perigeeDistance; // perigee distance
 	private double radius; // the radius from the center of the earth
@@ -91,6 +91,22 @@ public class Orbit {
 
 	public void setRadius(double r) {
 		this.radius = r;
+	}
+	
+	public double getX() {
+		return 0.0;
+	}
+	
+	public double getY() {
+		return 0.0;
+	}
+	
+	public double getZ() {
+		return 0.0;
+	}
+
+	public Vector3 getLocation() {
+		return new Vector3(0.0, 0.0, 0.0);
 	}
 
 }

@@ -1,7 +1,14 @@
 package constellation;
 
+import java.util.ArrayList;
+
+import AStar.AStar;
+import AStar.AStarNode;
+
 public class Constellation {
-	private Satellite[] satellites;
+	private ArrayList<Satellite> satellites;
+	private ArrayList<Entity> entities;
+	private AStar pathfinder;
 	
 	private static final double[] semiMajorAxis = { 7800000.0, 2800000.0, 3300000.0,
 	2800000.0, 2800000.0, 3300000.0, 2800000.0, 5000000, 5000000,
@@ -35,23 +42,77 @@ public class Constellation {
 		} else if (num < 0) {
 			num = 0;
 		}
-		satellites = new Satellite[num];
+		satellites = new ArrayList<Satellite>();
+		entities = new ArrayList<Entity>();
+		
 		for (int i = 0; i < num && i < 21; i++) {
-			satellites[i] = new Satellite(semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i]);
+			satellites.add(new Satellite(semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i], "Satellite" + i));
+			entities.add(satellites.get(i));
 		}
+		
+		pathfinder = new AStar();
 	}
 	
 	public void Propagate(double timeDiff) {
-		for (int i = 0; i < satellites.length; i++) {
-			satellites[i].Propagate(timeDiff);
-			System.out.println(String.format("Time: %1$d", timeDiff));
-			System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f�", i, satellites[i].getRadius(), satellites[i].getTrueAnomaly()));
+		for (int i = 0; i < satellites.size(); i++) {
+			satellites.get(i).Propagate(timeDiff);
+			//System.out.println(String.format("Time: %1$f", timeDiff));
+			//System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
 		}
+		System.out.println("tick");
+		pathFind("a", "b");
+	}
+	
+	public void addEntity(String name, double x, double y, double z) {
+		entities.add(new Entity("moon", name, x, y, z));
+	}
+	
+	public int pathFind(String a, String b) {
+		Entity sender = new Entity("tower1", "moon", 0, 0, -1.738E6);
+		Entity receiver = new Entity("tower2", "moon", 0, 0, 1.738E6);
+		int start = -1;
+		int end = -1;
+		
+		double dist = Double.MAX_VALUE;
+		System.out.println("dist " + dist);
+		
+		for (int i = 0; i < satellites.size(); i++) {
+			System.out.println("start " + distance(sender, satellites.get(i)));
+			if (distance(sender, satellites.get(i)) < dist) {
+				start = i;
+			}
+		}
+		
+		dist = Double.MAX_VALUE;
+		
+		for (int i = 0; i < satellites.size(); i++) {
+			System.out.println("end " + distance(sender, satellites.get(i)));
+			if (distance(receiver, satellites.get(i)) < dist) {
+				end = i;
+			}
+		}
+		
+		if (sender == receiver) {
+			System.out.println("they're close enough for same satellite " + start);
+		}
+		
+		System.out.println("start=" + start);
+		System.out.println("end=" + end);
+		
+		ArrayList<Satellite> path = pathfinder.findPath(satellites, start, end);
+		
+		return -1;
+	}
+	
+	public double distance(Entity a, Entity b) {
+		Vector3 locA = a.getLocation();
+		Vector3 locB = b.getLocation();
+		return Math.sqrt(Math.pow(locA.getX() - locB.getX(), 2) + Math.pow(locA.getY() - locB.getY(), 2) + Math.pow(locA.getZ() - locB.getZ(), 2));
 	}
 	
 	public void PrintDebug(double time) {
-		for (int i = 0; i < satellites.length; i++) {
-			System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f�", i, satellites[i].getRadius(), satellites[i].getTrueAnomaly()));
+		for (int i = 0; i < satellites.size(); i++) {
+			System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
 		}
 	}
 }
