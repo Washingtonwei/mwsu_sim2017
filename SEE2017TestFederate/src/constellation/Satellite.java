@@ -17,12 +17,12 @@ public class Satellite extends Entity {
 		location = orbit.getLocation();
 	}
 			
-	public double getRadius() {
-		return orbit.getRadius();
-	}
-	
-	public double getTrueAnomaly() {
-		return orbit.getTrueAnomaly();
-	}
+//	public double getRadius() {
+//		return orbit.getRadius();
+//	}
+//	
+//	public double getTrueAnomaly() {
+//		return orbit.getTrueAnomaly();
+//	}
 	
 }

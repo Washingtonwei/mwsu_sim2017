@@ -60,7 +60,7 @@ public class Constellation {
 			//System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
 		}
 		System.out.println("tick");
-		pathFind("a", "b");
+		//pathFind("a", "b");
 	}
 	
 	public void addEntity(String name, double x, double y, double z) {
@@ -74,19 +74,14 @@ public class Constellation {
 		int end = -1;
 		
 		double dist = Double.MAX_VALUE;
-		System.out.println("dist " + dist);
-		
 		for (int i = 0; i < satellites.size(); i++) {
-			System.out.println("start " + distance(sender, satellites.get(i)));
 			if (distance(sender, satellites.get(i)) < dist) {
 				start = i;
 			}
 		}
 		
 		dist = Double.MAX_VALUE;
-		
 		for (int i = 0; i < satellites.size(); i++) {
-			System.out.println("end " + distance(sender, satellites.get(i)));
 			if (distance(receiver, satellites.get(i)) < dist) {
 				end = i;
 			}
@@ -95,9 +90,6 @@ public class Constellation {
 		if (sender == receiver) {
 			System.out.println("they're close enough for same satellite " + start);
 		}
-		
-		System.out.println("start=" + start);
-		System.out.println("end=" + end);
 		
 		ArrayList<Satellite> path = pathfinder.findPath(satellites, start, end);
 		
@@ -110,9 +102,22 @@ public class Constellation {
 		return Math.sqrt(Math.pow(locA.getX() - locB.getX(), 2) + Math.pow(locA.getY() - locB.getY(), 2) + Math.pow(locA.getZ() - locB.getZ(), 2));
 	}
 	
-	public void PrintDebug(double time) {
-		for (int i = 0; i < satellites.size(); i++) {
-			System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
-		}
+	public Satellite getSatellite(int i) {
+		return satellites.get(i);
 	}
+	
+	public Entity getEntity(String name) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i).getName() == name) {
+				return entities.get(i);
+			}
+		}
+		return null;
+	}
+	
+//	public void PrintDebug(double time) {
+//		for (int i = 0; i < satellites.size(); i++) {
+//			System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
+//		}
+//	}
 }
