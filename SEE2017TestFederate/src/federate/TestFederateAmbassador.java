@@ -1,7 +1,12 @@
 package federate;
 
 import hla.rti1516e.FederateHandleSet;
+import hla.rti1516e.ObjectInstanceHandle;
+import hla.rti1516e.RtiFactory;
+import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SynchronizationPointFailureReason;
+import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.exceptions.RTIinternalError;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -59,5 +64,23 @@ public class TestFederateAmbassador extends SEEAbstractFederateAmbassador {
 		else
 			throw new IllegalArgumentException("SynchronizationPoint["+sp+"] not defined");
 	}
-
+	
+	public EncoderFactory getEncoderFactory()
+	{
+		RtiFactory rti_factory = null;
+		try {
+			rti_factory = RtiFactoryFactory.getRtiFactory();
+		} catch (RTIinternalError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		EncoderFactory encoder_factory = null;
+		try {
+			encoder_factory = rti_factory.getEncoderFactory();
+		} catch (RTIinternalError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return encoder_factory;
+	}
 }

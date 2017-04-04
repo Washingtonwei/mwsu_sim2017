@@ -22,6 +22,10 @@ public class HLAModule {
 		this.rti_amb  = SEERTIAmbassador.getInstance();
 	}
 
+	public RTIambassador getAmbassador() {
+		return rti_amb;
+	}
+	
 	// *********************** SynchronizationPoint ********************
 	public void achieveSynchronizationPoint(SynchronizationPoint sp) {
 		try {

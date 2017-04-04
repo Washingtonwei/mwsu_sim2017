@@ -1,5 +1,16 @@
 package federate;
 
+import hla.rti1516e.RTIambassador;
+import hla.rti1516e.RtiFactory;
+import hla.rti1516e.RtiFactoryFactory;
+import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAboolean;
+import hla.rti1516e.encoding.HLAfixedArray;
+import hla.rti1516e.encoding.HLAfloat32LE;
+import hla.rti1516e.encoding.HLAfloat64LE;
+import hla.rti1516e.encoding.HLAinteger32BE;
+import hla.rti1516e.encoding.HLAinteger32LE;
+import hla.rti1516e.encoding.HLAunicodeString;
 import hla.rti1516e.exceptions.*;
 
 import java.net.MalformedURLException;
@@ -25,6 +36,8 @@ import skf.exception.UnsubscribeException;
 import skf.exception.UpdateException;
 
 public class TestFederate extends SEEAbstractFederate implements Observer {
+	
+	private boolean constellationInitialized = false;
 
 	private final static Logger logger = LogManager.getLogger(TestFederate.class);
 
@@ -37,9 +50,23 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 	private HLAModule hla_module = null;
 
 	private ShutdownTask shutdownTask = null;
+	
+	//encoder to send data
+	private EncoderFactory encoder_factory;
 
 	private long timeCycle;
-	private Constellation constellation;
+	private Constellation 	constellation;
+	public HLAunicodeString 					string_encoder;
+	public HLAinteger32LE 					integer_32LE_encoder;
+	public HLAfloat64LE 						float_64LE_encoder;
+	public HLAfloat32LE 						float_32LE_encoder;
+	public HLAboolean 						boolean_encoder;
+	public HLAinteger32BE					integer_encoder;
+	public HLAfixedArray<HLAfloat64LE>		vector_encoder;
+	
+	private static volatile boolean _reservationComplete;
+	private static volatile boolean _reservationSucceeded;
+	private static final Object _reservationSemaphore = new Object();
 
 	public TestFederate(SEEAbstractFederateAmbassador seefedamb) throws RTIinternalError {
 		super(seefedamb);
@@ -47,8 +74,11 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		this.exco = new ExecutionConfiguration();
 		this.hla_module = new HLAModule(seefedamb);
 		this.shutdownTask = new ShutdownTask(this);
+		this.encoder_factory = ((TestFederateAmbassador)seefedamb).getEncoderFactory();
+		this.constellationInitialized = false;
 	}
 
+	//TODO: add encoder, decoder, class handle, and publish to configureAndStart()
 	public void configureAndStart(Configuration config)
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, UnsupportedCallbackModel,
 			CallNotAllowedFromWithinCallback, RTIinternalError, CouldNotCreateLogicalTimeFactory,
@@ -162,7 +192,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		super.startExecution();
 
 		timeCycle = getTime().getFederationExecutionTimeCycle();
-		constellation = new Constellation(21);
+		constellation = new Constellation(this, 21);
 		constellation.addEntity("tower1", 864370, 6657762, 3637152);
 		constellation.addEntity("tower2", -864370, -6657762, -3637152);
 	}
@@ -211,11 +241,29 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 
 	}
 
+	protected void createEncoders()
+	{
+		try {
+			string_encoder = encoder_factory.createHLAunicodeString();
+			integer_32LE_encoder = encoder_factory.createHLAinteger32LE();
+			float_64LE_encoder = encoder_factory.createHLAfloat64LE();
+			float_32LE_encoder = encoder_factory.createHLAfloat32LE();
+			vector_encoder = encoder_factory.createHLAfixedArray(
+					encoder_factory.createHLAfloat64LE(), 
+					encoder_factory.createHLAfloat64LE(),
+					encoder_factory.createHLAfloat64LE() );
+		}catch (Exception e) {
+			System.out.println("Failed to initialize Encoders.");
+			System.out.println(e.getMessage() );
+		}
+	}
+	
 	public HLAModule getHLAModule() {
 		return this.hla_module;
 	}
 
-	public void sendGoToShutdown() {
+	public void sendGoToShutdown() 
+	{
 
 		modeTransition.setExecution_mode(MTRMode.MTR_GOTO_SHUTDOWN);
 		try {
@@ -227,5 +275,49 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		}
 
 	}
+	
+	public RTIambassador getAmbassador() {
+		return hla_module.getAmbassador();
+	}
+	
+	public boolean isConstellationInitialized()
+	{
+		return constellationInitialized;
+	}
+	
+	public void setConstellationInitialized(boolean constellationInitialized)
+	{
+		this.constellationInitialized = constellationInitialized;
+	}
+	
+	//Reserve the object name
+	public void reserveObjectInstanceName (String name)
+	{
+		try{
+			_reservationComplete = false;
+			synchronized (_reservationSemaphore) 
+			{
+				hla_module.getAmbassador().reserveObjectInstanceName (name);
+				System.out.println("in reserve");
+				//wait for response from RTI
+				while(!_reservationComplete)
+				{
+					try{
+						_reservationSemaphore.wait();
+					}catch (InterruptedException ignored)
+					{
+						
+					}
+				}
+				System.out.println("after wait");
+			}
+		}catch(RTIexception e){
+			System.out.println("RTI exception when reserving name: " + e.getMessage());
+			return;
+		}catch (Exception e){
+			System.out.println("Illegal name?");
+		}
+	}
+
 
 }

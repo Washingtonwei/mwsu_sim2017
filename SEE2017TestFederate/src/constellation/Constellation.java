@@ -3,6 +3,7 @@ package constellation;
 import java.util.ArrayList;
 
 import AStar.AStar;
+import federate.TestFederate;
 
 public class Constellation {
 	private ArrayList<Satellite> satellites;
@@ -36,8 +37,11 @@ public class Constellation {
 	4.121821921, 0.980234504, 5.467802387, 2.326209734, 0.501590174,
 	3.643182827, 1.81158195, 4.953174604 };
 	
-	public Constellation(int num) {
+	private TestFederate federate;
+	
+	public Constellation(TestFederate federate, int num) {
 		IDs = 0;
+		this.federate = federate;
 		if (num > 21) {
 			num = 21;
 		} else if (num < 0) {
@@ -45,9 +49,14 @@ public class Constellation {
 		}
 		satellites = new ArrayList<Satellite>();
 		entities = new ArrayList<Entity>();
-		
+		String name;
 		for (int i = 0; i < num && i < 21; i++) {
-			satellites.add(new Satellite(semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i], "Satellite" + i, IDs));
+			name = "mwsu_satellite_" + 0;
+			satellites.add(new Satellite(federate, semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i], name, IDs));
+			satellites.get(i).setHlaAttributes();
+			federate.reserveObjectInstanceName(name);
+			System.out.println("after reserve");
+			satellites.get(i).registerObjectInstance();
 			entities.add(satellites.get(i));
 			IDs++;
 		}
@@ -60,6 +69,7 @@ public class Constellation {
 			satellites.get(i).Propagate(timeDiff);
 			//System.out.println(String.format("Time: %1$f", timeDiff));
 			//System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
+			satellites.get(i).postAttributes();
 		}
 //		Vector3 loc = satellites.get(0).getLocation();
 //		System.out.println(loc.getX() + " " + loc.getY() + " " + loc.getZ());

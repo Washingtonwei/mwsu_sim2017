@@ -8,24 +8,34 @@ public class Entity {
 	protected String name;
 	protected int id;
 	protected String status;
-	protected ReferenceFrame parentReferenceFrame;
+	//protected ReferenceFrame parentReferenceFrame;
+	
+	public enum ReferenceFrame {
+		SolarSystemBarycentricInertial,
+		EarthMoonBarycentricInertial,
+		SunCentricInertial,
+		EarthCentricInertial,
+		MoonCentricInertial,
+		EarthCentricFixed,
+		MoonCentricFixed
+	}
 	
 	public Entity(ReferenceFrame parentReferenceFrame, String name, int id) {
-		this.parentReferenceFrame = parentReferenceFrame;
+		//this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		location = new Vector3(0.0, 0.0, 0.0);
 		this.id = id;
 	}
 	
 	public Entity(ReferenceFrame parentReferenceFrame, String name, double x, double y, double z, int id) {
-		this.parentReferenceFrame = parentReferenceFrame;
+		//this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		this.location = new Vector3(x, y, z);
 		this.id = id;
 	}
 	
 	public Entity(ReferenceFrame parentReferenceFrame, String name, double x, double y, double z, double radius, int id) {
-		this.parentReferenceFrame = parentReferenceFrame;
+		//this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		this.location = new Vector3(x, y, z);
 		this.radius = radius;
@@ -56,13 +66,13 @@ public class Entity {
 		return location.getZ();
 	}
 
-	public ReferenceFrame getParentReferenceFrame() {
-		return parentReferenceFrame;
-	}
-
-	public void setParentReferenceFrame(ReferenceFrame parentReferenceFrame) {
-		this.parentReferenceFrame = parentReferenceFrame;
-	}
+//	public ReferenceFrame getParentReferenceFrame() {
+//		return parentReferenceFrame;
+//	}
+//
+//	public void setParentReferenceFrame(ReferenceFrame parentReferenceFrame) {
+//		this.parentReferenceFrame = parentReferenceFrame;
+//	}
 	
 	public String getName() {
 		return name;
