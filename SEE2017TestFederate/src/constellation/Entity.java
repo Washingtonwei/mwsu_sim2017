@@ -1,28 +1,35 @@
 package constellation;
 
+import siso.smackdown.frame.ReferenceFrame;
+
 public class Entity {
 	protected Vector3 location;
 	protected double radius;
-	protected String referenceFrame;
 	protected String name;
+	protected int id;
+	protected String status;
+	protected ReferenceFrame parentReferenceFrame;
 	
-	public Entity(String referenceFrame, String name) {
-		this.referenceFrame = referenceFrame;
+	public Entity(ReferenceFrame parentReferenceFrame, String name, int id) {
+		this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		location = new Vector3(0.0, 0.0, 0.0);
+		this.id = id;
 	}
 	
-	public Entity(String referenceFrame, String name, double x, double y, double z) {
-		this.referenceFrame = referenceFrame;
+	public Entity(ReferenceFrame parentReferenceFrame, String name, double x, double y, double z, int id) {
+		this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		this.location = new Vector3(x, y, z);
+		this.id = id;
 	}
 	
-	public Entity(String referenceFrame, String name, double x, double y, double z, double radius) {
-		this.referenceFrame = referenceFrame;
+	public Entity(ReferenceFrame parentReferenceFrame, String name, double x, double y, double z, double radius, int id) {
+		this.parentReferenceFrame = parentReferenceFrame;
 		this.name = name;
 		this.location = new Vector3(x, y, z);
 		this.radius = radius;
+		this.id = id;
 	}
 	
 	public void setX(double x) {
@@ -48,13 +55,21 @@ public class Entity {
 	public double getZ() {
 		return location.getZ();
 	}
-	
-	public String getReferenceFrame() {
-		return referenceFrame;
+
+	public ReferenceFrame getParentReferenceFrame() {
+		return parentReferenceFrame;
+	}
+
+	public void setParentReferenceFrame(ReferenceFrame parentReferenceFrame) {
+		this.parentReferenceFrame = parentReferenceFrame;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 	public void setLocation(Vector3 location) {

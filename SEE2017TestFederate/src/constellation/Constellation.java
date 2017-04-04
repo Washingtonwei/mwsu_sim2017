@@ -3,12 +3,12 @@ package constellation;
 import java.util.ArrayList;
 
 import AStar.AStar;
-import AStar.AStarNode;
 
 public class Constellation {
 	private ArrayList<Satellite> satellites;
 	private ArrayList<Entity> entities;
 	private AStar pathfinder;
+	private int IDs;
 	
 	private static final double[] semiMajorAxis = { 7800000.0, 2800000.0, 3300000.0,
 	2800000.0, 2800000.0, 3300000.0, 2800000.0, 5000000, 5000000,
@@ -37,6 +37,7 @@ public class Constellation {
 	3.643182827, 1.81158195, 4.953174604 };
 	
 	public Constellation(int num) {
+		IDs = 0;
 		if (num > 21) {
 			num = 21;
 		} else if (num < 0) {
@@ -46,8 +47,9 @@ public class Constellation {
 		entities = new ArrayList<Entity>();
 		
 		for (int i = 0; i < num && i < 21; i++) {
-			satellites.add(new Satellite(semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i], "Satellite" + i));
+			satellites.add(new Satellite(semiMajorAxis[i], eccentricity[i], inclination[i], argOfPerigree[i], RAAN[i], trueAnomaly[i], "Satellite" + i, IDs));
 			entities.add(satellites.get(i));
+			IDs++;
 		}
 		
 		pathfinder = new AStar();
@@ -59,40 +61,76 @@ public class Constellation {
 			//System.out.println(String.format("Time: %1$f", timeDiff));
 			//System.out.println(String.format("Satellite: %d radius: %2$fm true anomaly: %3$f", i, satellites.get(i).getRadius(), satellites.get(i).getTrueAnomaly()));
 		}
+//		Vector3 loc = satellites.get(0).getLocation();
+//		System.out.println(loc.getX() + " " + loc.getY() + " " + loc.getZ());
 		System.out.println("tick");
-		//pathFind("a", "b");
+		int sender = pathFind("tower1", "tower2");
+		System.out.println("sent from " + sender);
 	}
 	
 	public void addEntity(String name, double x, double y, double z) {
-		entities.add(new Entity("moon", name, x, y, z));
+		entities.add(new Entity(null, name, x, y, z, IDs));
+		IDs++;
 	}
 	
-	public int pathFind(String a, String b) {
-		Entity sender = new Entity("tower1", "moon", 0, 0, -1.738E6);
-		Entity receiver = new Entity("tower2", "moon", 0, 0, 1.738E6);
+	public int getEntityID(String name) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i).name == name) {
+				return entities.get(i).getID();
+			}
+		}
+		return -1;
+	}
+	
+	public int pathFind(String from, String to) {
+		int fromID = getEntityID(from);
+		int toID = getEntityID(to);
+		//if either are -1 then that entity doesn't exist
+		if (fromID == -1) {
+			System.out.println("no such entity " + from);
+			return -1;
+		}
+		if (toID == -1) {
+			System.out.println("no such entity " + to);
+			return -1;
+		}
+		//0, 0, -1.738E6
+		Entity sender = entities.get(fromID);
+		Entity receiver = entities.get(toID);
 		int start = -1;
 		int end = -1;
 		
+		//find satellite closest to 'from' entity
 		double dist = Double.MAX_VALUE;
 		for (int i = 0; i < satellites.size(); i++) {
 			if (distance(sender, satellites.get(i)) < dist) {
 				start = i;
+				dist = distance(sender, satellites.get(i));
 			}
 		}
-		
+
+		//find satellite closest to 'to' entity
 		dist = Double.MAX_VALUE;
 		for (int i = 0; i < satellites.size(); i++) {
 			if (distance(receiver, satellites.get(i)) < dist) {
 				end = i;
+				dist = distance(receiver, satellites.get(i));
 			}
 		}
 		
-		if (sender == receiver) {
-			System.out.println("they're close enough for same satellite " + start);
+		//they're close enough to use one satellite.
+		if (start == end) {
+			return start;
 		}
 		
+		//find a path between the satellites closest to the from and to entities
 		ArrayList<Satellite> path = pathfinder.findPath(satellites, start, end);
 		
+		//we succeeded in finding a path
+		if (path != null) {
+			return path.get(path.size() - 1).getID();
+		}
+		//we failed to find a path
 		return -1;
 	}
 	

@@ -14,7 +14,6 @@ import model.objectClass.ExecutionMode;
 import org.apache.logging.log4j.*;
 
 import constellation.Constellation;
-import constellation.Orbit;
 import siso.smackdown.frame.FrameType;
 import siso.smackdown.frame.ReferenceFrame;
 import skf.config.Configuration;
@@ -164,6 +163,8 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 
 		timeCycle = getTime().getFederationExecutionTimeCycle();
 		constellation = new Constellation(21);
+		constellation.addEntity("tower1", 864370, 6657762, 3637152);
+		constellation.addEntity("tower2", -864370, -6657762, -3637152);
 	}
 
 	// this is where we will propagate satellites
@@ -179,7 +180,7 @@ public class TestFederate extends SEEAbstractFederate implements Observer {
 		// need to change orbit class so it fits our satellite/moon scenario
 		if (constellation != null) {
 			// orbits per day / seconds in a day / microseconds in a second * the time difference
-			constellation.Propagate(24/86400 / 1000000 * timeDifference);
+			constellation.Propagate(Math.PI / 360);
 		}
 		/*
 		 * proactive behavior

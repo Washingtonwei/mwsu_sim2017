@@ -4,33 +4,35 @@ import constellation.Entity;
 import constellation.Vector3;
 
 public class AStarNode {
-
-	private double priority;
+	//cost is the distance from start
+	private double cost;
 	private Entity entity;
 	private AStarNode parent;
 	
 	public AStarNode(Entity entity) {
 		this.entity = entity;
-		priority = Double.MAX_VALUE;
+		cost = Double.MAX_VALUE;
+		parent = null;
 	}
 	
 	public AStarNode(Entity entity, int priority) {
 		this.entity = entity;
-		this.priority = priority;
+		this.cost = priority;
+		parent = null;
 	}
 	
-	public void setPriority(double priority) {
-		this.priority = priority;
+	public void setCost(double cost) {
+		this.cost = cost;
 	}
 	
-	public void setLowerPriority(double priority) {
-		if (this.priority < priority) {
-			this.priority = priority;
+	public void setLowerCost(double cost) {
+		if (this.cost > cost) {
+			this.cost = cost;
 		}
 	}
 	
-	public double getPriority() {
-		return priority;
+	public double getCost() {
+		return cost;
 	}
 	
 	public void setVector(Vector3 vec) {
